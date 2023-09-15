@@ -5,7 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import ru.goloviy.profileservice.convertor.UserConvertor;
 import ru.goloviy.profileservice.dto.request.UserRegister;
 import ru.goloviy.profileservice.exception.InvalidDataException;
