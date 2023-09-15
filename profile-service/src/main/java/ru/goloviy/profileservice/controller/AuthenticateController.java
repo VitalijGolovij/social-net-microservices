@@ -9,6 +9,8 @@ import ru.goloviy.profileservice.service.LoginService;
 import ru.goloviy.profileservice.service.RegisterService;
 import ru.goloviy.profileservice.util.JwtTokenResponse;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticateController {
@@ -22,13 +24,12 @@ public class AuthenticateController {
     }
 
     @PostMapping("/login")
-    public JwtTokenResponse login(@RequestBody UserLogin userLogin,
-                                 BindingResult bindingResult){
+    public JwtTokenResponse login(@RequestBody UserLogin userLogin){
         return loginService.login(userLogin);
     }
 
     @PostMapping("/register")
-    public JwtTokenResponse register(@RequestBody UserRegister userRegister,
+    public JwtTokenResponse register(@RequestBody @Valid UserRegister userRegister,
                                     BindingResult bindingResult){
         return registerService.register(userRegister, bindingResult);
     }

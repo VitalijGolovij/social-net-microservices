@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class ErrorsValidationProcessor {
+public class ErrorsValidationProcessorImpl implements ErrorsValidationProcessor{
+    @Override
     public List<Map<String, String>>processErrors(BindingResult bindingResult){
         List<FieldError> errors = bindingResult.getFieldErrors();
         List<Map<String, String>> errorList = new ArrayList<>();
