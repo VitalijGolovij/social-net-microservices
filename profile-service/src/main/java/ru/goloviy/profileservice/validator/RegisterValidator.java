@@ -27,7 +27,7 @@ public class RegisterValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserRegister userRegister = (UserRegister) target;
 
-        Optional<User> user = userRepository.findUserByUsername(userRegister.getUsername());
+        Optional<User> user = userRepository.getUserByUsername(userRegister.getUsername());
 
         if(user.isPresent()){
             errors.rejectValue("username","NotFound",

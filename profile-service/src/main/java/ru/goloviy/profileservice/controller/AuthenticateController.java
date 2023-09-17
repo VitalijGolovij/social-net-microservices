@@ -1,6 +1,8 @@
 package ru.goloviy.profileservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.goloviy.profileservice.dto.request.UserLogin;
@@ -24,13 +26,15 @@ public class AuthenticateController {
     }
 
     @PostMapping("/login")
-    public JwtTokenResponse login(@RequestBody UserLogin userLogin){
-        return loginService.login(userLogin);
+    public ResponseEntity<JwtTokenResponse> login(@RequestBody UserLogin userLogin){
+        JwtTokenResponse response = loginService.login(userLogin);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public JwtTokenResponse register(@RequestBody @Valid UserRegister userRegister,
+    public ResponseEntity<JwtTokenResponse> register(@RequestBody @Valid UserRegister userRegister,
                                     BindingResult bindingResult){
-        return registerService.register(userRegister, bindingResult);
+        JwtTokenResponse response = registerService.register(userRegister, bindingResult);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
