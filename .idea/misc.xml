@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/demoapp/pom.xml" />
         <option value="$PROJECT_DIR$/profile-service/pom.xml" />
+        <option value="$PROJECT_DIR$/chess-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

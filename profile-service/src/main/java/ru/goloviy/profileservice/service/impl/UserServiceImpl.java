@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import ru.goloviy.profileservice.dto.UserDto;
 import ru.goloviy.profileservice.dto.request.GetUserListRequest;
 import ru.goloviy.profileservice.exception.InvalidDataException;
+import ru.goloviy.profileservice.kafka.JsonKafkaProducer;
 import ru.goloviy.profileservice.model.User;
 import ru.goloviy.profileservice.repository.UserRepository;
 import ru.goloviy.profileservice.service.ExampleService;
@@ -26,13 +27,15 @@ public class UserServiceImpl implements UserService {
     private final PaginationService paginationService;
     private final ExampleService<User, UserDto> exampleService;
     private final ErrorsValidationProcessor errorsValidationProcessor;
+    private final JsonKafkaProducer jsonKafkaProducer;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PaginationService paginationService, ExampleService<User, UserDto> exampleService, ErrorsValidationProcessor errorsValidationProcessor) {
+    public UserServiceImpl(UserRepository userRepository, PaginationService paginationService, ExampleService<User, UserDto> exampleService, ErrorsValidationProcessor errorsValidationProcessor, JsonKafkaProducer jsonKafkaProducer) {
         this.userRepository = userRepository;
         this.paginationService = paginationService;
         this.exampleService = exampleService;
         this.errorsValidationProcessor = errorsValidationProcessor;
+        this.jsonKafkaProducer = jsonKafkaProducer;
     }
 
     @Override
@@ -71,5 +74,11 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = paginationService.getPageable(request.getPagination());
         Example<User> example = exampleService.getExample(request.getUserFilter());
         return userRepository.findAll(example, pageable).getContent();
+    }
+
+    @Transactional
+    public void test(Long id){
+        User user = getUserBy(id);
+        jsonKafkaProducer.sendMessage(user);
     }
 }

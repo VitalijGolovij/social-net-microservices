@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.goloviy.profileservice.convertor.UserConvertor;
 import ru.goloviy.profileservice.dto.UserDto;
 import ru.goloviy.profileservice.dto.request.GetUserListRequest;
+import ru.goloviy.profileservice.kafka.JsonKafkaProducer;
 import ru.goloviy.profileservice.model.User;
 import ru.goloviy.profileservice.service.UserService;
 
@@ -21,7 +22,7 @@ public class UserController {
     private final UserConvertor userConvertor;
 
     @Autowired
-    public UserController(UserService userService, UserConvertor userConvertor) {
+    public UserController(UserService userService, UserConvertor userConvertor, JsonKafkaProducer jsonKafkaProducer) {
         this.userService = userService;
         this.userConvertor = userConvertor;
     }
@@ -39,5 +40,11 @@ public class UserController {
         User user = userService.getUserBy(id);
         UserDto userDto = userConvertor.toUserDto(user);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/test/{id}")
+    public ResponseEntity<?> test(@PathVariable Long id){
+        userService.test(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }

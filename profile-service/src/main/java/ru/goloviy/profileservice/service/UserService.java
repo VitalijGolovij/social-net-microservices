@@ -10,4 +10,5 @@ public interface UserService {
     User getUserBy(String username);
     User getUserBy(Long id);
     List<User> getUserList(GetUserListRequest request, BindingResult bindingResult);
+    void test(Long id);
 }
