@@ -1,6 +1,5 @@
 package ru.goloviy.profileservice.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +22,13 @@ public class JsonKafkaProducer {
     public void sendMessage(User data){
         LOGGER.info(String.format("Message send: %s", data.toString()));
         try {
-            //        Message<User> message = MessageBuilder
-//                .withPayload(data)
-//                .setHeader(KafkaHeaders.TOPIC, "TestTopic")
-//                .build();
-            ObjectMapper objectMapper = new ObjectMapper();
-            String userJson = objectMapper.writeValueAsString(data);
-
-            Message<String> message = MessageBuilder
-                    .withPayload(userJson)
-                    .setHeader(KafkaHeaders.TOPIC, "TestTopic")
-                    .build();
+            Message<User> message = MessageBuilder
+                .withPayload(data)
+                .setHeader(KafkaHeaders.TOPIC, "TestTopic")
+                .build();
             kafkaTemplate.send(message);
         } catch (Exception e){
-            LOGGER.info("наебнулось");
+            LOGGER.info(String.format("cannot send message: %s", data.toString()));
         }
     }
 }

@@ -7,11 +7,11 @@ import ru.goloviy.messageservice.model.User;
 import ru.goloviy.messageservice.repository.UserRepository;
 
 @Service
-public class ChessGameConsumer {
+public class UserConsumer {
     private final UserRepository userRepository;
 
     @Autowired
-    public ChessGameConsumer(UserRepository userRepository) {
+    public UserConsumer(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

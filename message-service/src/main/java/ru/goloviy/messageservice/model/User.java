@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -40,12 +41,12 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JsonIgnore
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JsonIgnore
-    private List<Chat> chats;
+    private List<Chat> chats = new ArrayList<>();
 
     @Override
     public String toString() {
