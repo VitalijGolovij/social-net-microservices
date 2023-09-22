@@ -1,4 +1,4 @@
-package ru.goloviy.messageservice.consumer;
+package ru.goloviy.messageservice.kafka.consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,7 +16,7 @@ public class UserConsumer {
     }
 
     @KafkaListener(topics = "TestTopic", groupId = "group_id")
-    public void createChessGame(User user){
+    public void catchUser(User user){
         userRepository.save(user);
     }
 }

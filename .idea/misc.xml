@@ -10,11 +10,14 @@
         <option value="$PROJECT_DIR$/profile-service/pom.xml" />
         <option value="$PROJECT_DIR$/chess-service/pom.xml" />
         <option value="$PROJECT_DIR$/message-service/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-service/pom.xml" />
+        <option value="$PROJECT_DIR$/email-sender-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/demoapp/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-service/pom.xml" />
       </set>
     </option>
   </component>

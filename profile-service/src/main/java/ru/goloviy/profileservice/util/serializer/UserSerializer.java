@@ -13,6 +13,7 @@ import java.io.IOException;
 
 public class UserSerializer implements Serializer<User> {
     private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public byte[] serialize(String s, User user) {
         try {
@@ -25,13 +26,4 @@ public class UserSerializer implements Serializer<User> {
             throw new RuntimeException("Ошибка при сериализации объекта User: " + e.getMessage(), e);
         }
     }
-
-//    @Override
-//    public void serialize(User user, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-//        jsonGenerator.writeStartObject();
-//        jsonGenerator.writeNumberField("id", user.getId());
-//        jsonGenerator.writeStringField("username", user.getUsername());
-//        jsonGenerator.writeStringField("country", user.getCountry());
-//        jsonGenerator.writeEndObject();
-//    }
 }

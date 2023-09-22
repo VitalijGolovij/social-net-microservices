@@ -3,11 +3,13 @@ package ru.goloviy.messageservice.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.goloviy.messageservice.event.SendMessageEvent;
 import ru.goloviy.messageservice.exception.ChatNotFoundException;
 import ru.goloviy.messageservice.model.Chat;
 import ru.goloviy.messageservice.model.Message;
 import ru.goloviy.messageservice.model.User;
 import ru.goloviy.messageservice.repository.ChatRepository;
+import ru.goloviy.messageservice.service.EventProcessService;
 import ru.goloviy.messageservice.service.MessageService;
 import ru.goloviy.messageservice.service.UserService;
 
@@ -20,11 +22,14 @@ import java.util.Set;
 public class MessageServiceImpl implements MessageService {
     private final UserService userService;
     private final ChatRepository chatRepository;
+    private final EventProcessService eventProcessService;
+
 
     @Autowired
-    public MessageServiceImpl(UserService userService, ChatRepository chatRepository) {
+    public MessageServiceImpl(UserService userService, ChatRepository chatRepository, EventProcessService eventProcessService) {
         this.userService = userService;
         this.chatRepository = chatRepository;
+        this.eventProcessService = eventProcessService;
     }
     @Override
     @Transactional
@@ -42,6 +47,7 @@ public class MessageServiceImpl implements MessageService {
         message.setChat(chat);
 
         chatRepository.save(chat);
+        eventProcessService.processPrivateMessage(userSender, userReceiver, text);
     }
 
     @Override
@@ -53,6 +59,7 @@ public class MessageServiceImpl implements MessageService {
         chat.addMessage(message);
         message.setChat(chat);
         chatRepository.save(chat);
+        eventProcessService.processChatMessage(chat, user, text);
     }
     @Override
     public List<Chat> getUserChats(Long userId){
@@ -82,5 +89,5 @@ public class MessageServiceImpl implements MessageService {
         ).toList();
         return chats.isEmpty() ? null : chats.get(0);
     }
-    //TODO доделать методы, синхронизация бд по кафке, отправка email по кафке, DTO для User
+    //DTO для User
 }
