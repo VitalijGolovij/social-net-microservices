@@ -15,7 +15,7 @@ public class UserConsumer {
         this.userRepository = userRepository;
     }
 
-    @KafkaListener(topics = "TestTopic", groupId = "group_id")
+    @KafkaListener(topics = "TestTopic", groupId = "file_storage_service")
     public void catchUser(User user){
         userRepository.save(user);
     }

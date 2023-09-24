@@ -24,7 +24,7 @@ public class Chat {
     private Long id;
 
     @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Message> messages;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -33,7 +33,7 @@ public class Chat {
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<User> members;
 
