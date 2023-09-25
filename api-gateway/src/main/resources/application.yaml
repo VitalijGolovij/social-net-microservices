@@ -1,0 +1,56 @@
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: profile
+          uri: lb://profile
+          predicates:
+            Path=/profile/**
+          filters:
+            - AuthenticationFilter
+
+        - id: message
+          uri: lb://message
+          predicates:
+            Path=/message/**
+          filters:
+            - AuthenticationFilter
+
+        - id: file-storage
+          uri: lb://file-storage
+          predicates:
+            Path=/file-storage/**
+          filters:
+            - AuthenticationFilter
+
+        - id: security
+          uri: lb://security
+          predicates:
+            Path=/security/**
+server:
+  port: 8086
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG

@@ -43,8 +43,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(c->c.requestMatchers("/auth/register","/auth/login","/auth/validate-token").permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(c->c.requestMatchers("/auth/register","/auth/login","/auth/validate-token",
+                                "security/auth/register").permitAll().anyRequest().authenticated())
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }

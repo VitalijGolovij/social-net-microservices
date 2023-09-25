@@ -14,7 +14,7 @@ import ru.goloviy.profileservice.util.JwtTokenResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/authdeprecated")
 public class AuthenticateController {
     private final RegisterService registerService;
     private final LoginService loginService;
