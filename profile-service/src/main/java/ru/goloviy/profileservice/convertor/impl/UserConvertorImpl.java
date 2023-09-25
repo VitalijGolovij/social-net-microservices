@@ -9,6 +9,7 @@ import ru.goloviy.profileservice.dto.request.UserRegister;
 import ru.goloviy.profileservice.model.User;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,6 +37,11 @@ public class UserConvertorImpl implements UserConvertor {
 
     @Override
     public List<UserDto> toUserDto(List<User> users){
+        return users.stream().map(this::toUserDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDto> toUserDto(Set<User> users) {
         return users.stream().map(this::toUserDto).collect(Collectors.toList());
     }
 

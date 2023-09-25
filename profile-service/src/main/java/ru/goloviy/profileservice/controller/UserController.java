@@ -12,6 +12,7 @@ import ru.goloviy.profileservice.kafka.JsonKafkaProducer;
 import ru.goloviy.profileservice.model.User;
 import ru.goloviy.profileservice.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -22,15 +23,15 @@ public class UserController {
     private final UserConvertor userConvertor;
 
     @Autowired
-    public UserController(UserService userService, UserConvertor userConvertor, JsonKafkaProducer jsonKafkaProducer) {
+    public UserController(UserService userService, UserConvertor userConvertor) {
         this.userService = userService;
         this.userConvertor = userConvertor;
     }
 
     @PostMapping("/get-user-list")
-    public ResponseEntity<List<UserDto>> getUserList(@RequestBody @Valid GetUserListRequest request,
-                                  BindingResult bindingResult){
-        List<User> users = userService.getUserList(request, bindingResult);
+    public ResponseEntity<List<UserDto>> getUserList(@RequestBody @Valid GetUserListRequest requestBody,
+                                                     BindingResult bindingResult){
+        List<User> users = userService.getUserList(requestBody, bindingResult);
         List<UserDto> usersDto = userConvertor.toUserDto(users);
         return new ResponseEntity<>(usersDto, HttpStatus.OK);
     }
