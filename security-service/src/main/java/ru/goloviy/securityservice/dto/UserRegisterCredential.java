@@ -19,4 +19,8 @@ public class UserRegisterCredential {
     private String password;
     @NotEmpty(message = "password can not be empty")
     private String confirmPassword;
+
+    private String firstname;
+    private String lastname;
+    private String country;
 }

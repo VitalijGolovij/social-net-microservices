@@ -22,6 +22,14 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent())
             return userOptional.get();
-        throw new UserNotFoundException(id);
+        throw new UserNotFoundException();
+    }
+
+    @Override
+    public User getUserBy(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent())
+            return userOptional.get();
+        throw new UserNotFoundException();
     }
 }

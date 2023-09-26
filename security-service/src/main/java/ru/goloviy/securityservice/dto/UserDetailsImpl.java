@@ -2,15 +2,15 @@ package ru.goloviy.securityservice.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.goloviy.securityservice.model.UserCredential;
+import ru.goloviy.securityservice.model.User;
 
 import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
-    private final UserCredential userCredential;
+    private final User user;
 
-    public UserDetailsImpl(UserCredential userCredential) {
-        this.userCredential = userCredential;
+    public UserDetailsImpl(User user) {
+        this.user = user;
     }
 
     @Override
@@ -20,12 +20,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userCredential.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userCredential.getUsername();
+        return user.getUsername();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package ru.goloviy.messageservice.convertor.impl;
 
-import com.netflix.discovery.converters.Auto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

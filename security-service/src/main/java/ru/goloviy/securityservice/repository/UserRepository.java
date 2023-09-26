@@ -1,12 +1,11 @@
-package ru.goloviy.filestorageservice.repository;
+package ru.goloviy.securityservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.goloviy.filestorageservice.model.User;
+import ru.goloviy.securityservice.model.User;
 
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Override
-    Optional<User> findById(Long aLong);
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 }

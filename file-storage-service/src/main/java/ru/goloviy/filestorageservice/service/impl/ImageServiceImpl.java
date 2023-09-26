@@ -1,9 +1,15 @@
 package ru.goloviy.filestorageservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import ru.goloviy.filestorageservice.exception.ImageNotFoundException;
+import ru.goloviy.filestorageservice.exception.SaveImageException;
 import ru.goloviy.filestorageservice.model.Image;
 import ru.goloviy.filestorageservice.model.User;
 import ru.goloviy.filestorageservice.repository.ImageRepository;
@@ -13,7 +19,11 @@ import ru.goloviy.filestorageservice.util.ImageCompressor;
 import ru.goloviy.filestorageservice.util.ImageDecompressor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,21 +31,18 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
     private final ImageCompressor imageCompressor;
     private final ImageDecompressor imageDecompressor;
-    private final UserService  userService;
     @Autowired
-    public ImageServiceImpl(ImageRepository imageRepository, ImageCompressor imageCompressor, ImageDecompressor imageDecompressor, UserService userService) {
+    public ImageServiceImpl(ImageRepository imageRepository, ImageCompressor imageCompressor, ImageDecompressor imageDecompressor) {
         this.imageRepository = imageRepository;
         this.imageCompressor = imageCompressor;
         this.imageDecompressor = imageDecompressor;
-        this.userService = userService;
     }
 
     @Override
-    public void saveImage(MultipartFile multipartFile, Long userId) {
+    public void saveImage(MultipartFile multipartFile, User user) {
         try {
-            User user = userService.getUserBy(userId);
             Image image = Image.builder()
-                    .name(multipartFile.getOriginalFilename())
+                    .name(UUID.randomUUID().toString() + ".png")
                     .type(multipartFile.getContentType())
                     .data(imageCompressor.compressImage(multipartFile.getBytes()))
                     .build();
@@ -43,7 +50,7 @@ public class ImageServiceImpl implements ImageService {
             image.setOwner(user);
             imageRepository.save(image);
         } catch (IOException e){
-
+            throw new SaveImageException();
         }
     }
 
@@ -55,5 +62,10 @@ public class ImageServiceImpl implements ImageService {
         } else {
             throw new ImageNotFoundException(imageName);
         }
+    }
+
+    @Override
+    public List<String> getImageNameList(User user) {
+        return user.getImages().stream().map(Image::getName).collect(Collectors.toList());
     }
 }

@@ -27,15 +27,14 @@ public class UserServiceImpl implements UserService {
     private final PaginationService paginationService;
     private final ExampleService<User, UserDto> exampleService;
     private final ErrorsValidationProcessor errorsValidationProcessor;
-    private final JsonKafkaProducer jsonKafkaProducer;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PaginationService paginationService, ExampleService<User, UserDto> exampleService, ErrorsValidationProcessor errorsValidationProcessor, JsonKafkaProducer jsonKafkaProducer) {
+    public UserServiceImpl(UserRepository userRepository, PaginationService paginationService,
+                           ExampleService<User, UserDto> exampleService, ErrorsValidationProcessor errorsValidationProcessor) {
         this.userRepository = userRepository;
         this.paginationService = paginationService;
         this.exampleService = exampleService;
         this.errorsValidationProcessor = errorsValidationProcessor;
-        this.jsonKafkaProducer = jsonKafkaProducer;
     }
 
     @Override
@@ -74,11 +73,5 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = paginationService.getPageable(request.getPagination());
         Example<User> example = exampleService.getExample(request.getUserFilter());
         return userRepository.findAll(example, pageable).getContent();
-    }
-
-    @Transactional
-    public void test(Long id){
-        User user = getUserBy(id);
-        jsonKafkaProducer.sendMessage(user);
     }
 }

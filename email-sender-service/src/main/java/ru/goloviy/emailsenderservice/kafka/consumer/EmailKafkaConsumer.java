@@ -22,10 +22,10 @@ public class EmailKafkaConsumer {
     @KafkaListener(topics = "Email", groupId = "group_id")
     public void sendEmail(EmailRequest message) {
         try {
-        emailSenderService.sendEmail(message);
+            emailSenderService.sendEmail(message);
+            emailService.saveMail(message);
         } catch (Exception e){
             LOGGER.info("cannot send email message: " + e.getMessage());
         }
-        emailService.saveMail(message);
     }
 }

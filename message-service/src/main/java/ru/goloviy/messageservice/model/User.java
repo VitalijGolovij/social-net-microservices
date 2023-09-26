@@ -1,7 +1,6 @@
 package ru.goloviy.messageservice.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +12,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -27,6 +25,7 @@ public class User implements Serializable {
     @Column(name = "username")
     private String username;
     @Column(name = "password")
+    @JsonIgnore
     private String password;
     @Column(name = "email")
     private String email;
@@ -35,6 +34,7 @@ public class User implements Serializable {
     @Column(name = "lastname")
     private String lastname;
     @Column(name = "country")
+    @JsonIgnore
     private String country;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
@@ -46,6 +46,13 @@ public class User implements Serializable {
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JsonIgnore
     private List<Chat> chats = new ArrayList<>();
+
+    public void addMessage(Message message){
+        messages.add(message);
+    }
+    public void addChat(Chat chat){
+        chats.add(chat);
+    }
 
     @Override
     public String toString() {

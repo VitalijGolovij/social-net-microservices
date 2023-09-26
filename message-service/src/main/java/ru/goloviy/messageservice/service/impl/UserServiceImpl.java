@@ -20,7 +20,14 @@ public class UserServiceImpl implements UserService {
     public User getUserBy(Long id) {
         User user = userRepository.getUserById(id);
         if (user == null)
-            throw new UserNotFoundException(id);
+            throw new UserNotFoundException();
+        return user;
+    }
+    @Override
+    public User getUserBy(String username) {
+        User user = userRepository.getUserByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException();
         return user;
     }
 }

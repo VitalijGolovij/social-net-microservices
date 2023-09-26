@@ -2,6 +2,7 @@ package ru.goloviy.securityservice.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,33 +13,37 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.goloviy.securityservice.dto.JwtToken;
 import ru.goloviy.securityservice.dto.UserLoginCredential;
 import ru.goloviy.securityservice.dto.UserRegisterCredential;
-import ru.goloviy.securityservice.model.UserCredential;
-import ru.goloviy.securityservice.repository.UserCredentialRepository;
+import ru.goloviy.securityservice.event.UserSaveEvent;
+import ru.goloviy.securityservice.model.User;
+import ru.goloviy.securityservice.repository.UserRepository;
 import ru.goloviy.securityservice.service.AuthenticateService;
 import ru.goloviy.securityservice.util.JwtUtil;
 
 @Service
 public class AuthenticateServiceImpl implements AuthenticateService {
-    private final UserCredentialRepository userCredentialRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
+    private final ApplicationEventPublisher eventPublisher;
     @Autowired
-    public AuthenticateServiceImpl(UserCredentialRepository userCredentialRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, ModelMapper modelMapper, AuthenticationManager authenticationManager) {
-        this.userCredentialRepository = userCredentialRepository;
+    public AuthenticateServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, ModelMapper modelMapper, AuthenticationManager authenticationManager, ApplicationEventPublisher eventPublisher) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.modelMapper = modelMapper;
         this.authenticationManager = authenticationManager;
+        this.eventPublisher = eventPublisher;
     }
     @Override
     @Transactional
     public JwtToken register(UserRegisterCredential registerCredential){
-        UserCredential userCredential = modelMapper.map(registerCredential, UserCredential.class);
-        userCredential.setPassword(passwordEncoder.encode(userCredential.getPassword()));
-        userCredentialRepository.save(userCredential);
-        return jwtUtil.generateToken(userCredential.getUsername());
+        User user = modelMapper.map(registerCredential, User.class);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        eventPublisher.publishEvent(new UserSaveEvent(this, user));
+        return jwtUtil.generateToken(user.getUsername());
     }
     @Override
     public JwtToken login(UserLoginCredential credential){
