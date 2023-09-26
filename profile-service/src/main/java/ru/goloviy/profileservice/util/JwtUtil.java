@@ -16,28 +16,12 @@ import java.util.Date;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
-    @Value("${jwt.daysLifeTime}")
-    private int daysLifeTime;
     @Value("${jwt.subject}")
     private String subject;
     @Value("${jwt.issuer}")
     private String issuer;
     @Value("${jwt.claim}")
     private String claim;
-
-    public JwtTokenResponse generateToken(String username){
-        Date exiparationDate = Date.from(ZonedDateTime.now().plusDays(daysLifeTime).toInstant());
-
-        String jwt = JWT.create()
-                .withSubject(subject)
-                .withClaim(claim, username)
-                .withIssuedAt(new Date())
-                .withIssuer(issuer)
-                .withExpiresAt(exiparationDate)
-                .sign(Algorithm.HMAC256(secret));
-        return new JwtTokenResponse(jwt, exiparationDate);
-    }
-
     public String getUsernameClaim(String token){
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                 .withSubject(subject)

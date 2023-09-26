@@ -9,6 +9,7 @@ import ru.goloviy.profileservice.dto.response.ResultResponse;
 import ru.goloviy.profileservice.dto.response.ValidateExceptionResponse;
 import ru.goloviy.profileservice.exception.FriendException;
 import ru.goloviy.profileservice.exception.InvalidDataException;
+import ru.goloviy.profileservice.exception.UserNotFoundException;
 
 @ControllerAdvice
 public class ProfileHandlerException {
@@ -20,7 +21,11 @@ public class ProfileHandlerException {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(FriendException e){
         ErrorResponse response = new ErrorResponse(e.getMessage());
-
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException e){
+        ErrorResponse response = new ErrorResponse(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

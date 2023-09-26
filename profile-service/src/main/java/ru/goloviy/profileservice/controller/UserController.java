@@ -3,6 +3,7 @@ package ru.goloviy.profileservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.goloviy.profileservice.convertor.UserConvertor;
@@ -14,6 +15,7 @@ import ru.goloviy.profileservice.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.util.List;
 
 @RestController
@@ -29,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/get-user-list")
-    public ResponseEntity<List<UserDto>> getUserList(@RequestBody @Valid GetUserListRequest requestBody,
+    public ResponseEntity<List<UserDto>> getUserList(@RequestBody @Nullable @Valid GetUserListRequest requestBody,
                                                      BindingResult bindingResult){
         List<User> users = userService.getUserList(requestBody, bindingResult);
         List<UserDto> usersDto = userConvertor.toUserDto(users);

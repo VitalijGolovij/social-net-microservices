@@ -3,14 +3,13 @@ package ru.goloviy.profileservice.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import ru.goloviy.profileservice.dto.UserDto;
 import ru.goloviy.profileservice.dto.request.GetUserListRequest;
 import ru.goloviy.profileservice.exception.InvalidDataException;
-import ru.goloviy.profileservice.kafka.JsonKafkaProducer;
+import ru.goloviy.profileservice.exception.UserNotFoundException;
 import ru.goloviy.profileservice.model.User;
 import ru.goloviy.profileservice.repository.UserRepository;
 import ru.goloviy.profileservice.service.ExampleService;
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public User getUserBy(String username) {
         Optional<User> user = userRepository.getUserByUsername(username);
         if(user.isEmpty()){
-            throw new UsernameNotFoundException(
+            throw new UserNotFoundException(
                     String.format("User with username '%s' not found", username)
             );
         }
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public User getUserBy(Long id) {
         Optional<User> user = userRepository.getUserById(id);
         if(user.isEmpty()){
-            throw new UsernameNotFoundException(
+            throw new UserNotFoundException(
                     String.format("User with id '%s' not found", id)
             );
         }
