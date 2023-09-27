@@ -8,7 +8,7 @@ import ru.goloviy.emailsenderservice.model.Email;
 
 @Component
 public class EmailConvertorImpl implements EmailConvertor {
-    @Value("${EMAIL}")
+    @Value("${spring.mail.from}")
     private String from;
     @Override
     public Email toMailMessage(EmailRequest request) {

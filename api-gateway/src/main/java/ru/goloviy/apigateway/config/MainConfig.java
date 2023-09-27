@@ -26,7 +26,7 @@ public class MainConfig {
                 .route(p -> p.path("/profile/**")
                         .filters(f -> f.rewritePath("/profile(?<segment>/?.*)", "$\\{segment}")
                                 .filter(filter.apply(new AuthenticationFilter.Config())))
-                        .uri("http://localhost:8082"))
+                        .uri("lb://profile"))
                 .route(p -> p.path("/message/**")
                         .filters(f -> f.rewritePath("/message(?<segment>/?.*)", "$\\{segment}")
                                 .filter(filter.apply(new AuthenticationFilter.Config())))

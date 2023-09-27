@@ -18,9 +18,9 @@ public class CustomExceptionHandler implements ErrorWebExceptionHandler {
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (ex instanceof AuthException) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
             String body = "";
             if (ex instanceof InvalidJwtTokenException) {
                 body = "{\"error\": \"Invalid jwt token\"}";
@@ -30,6 +30,9 @@ public class CustomExceptionHandler implements ErrorWebExceptionHandler {
             }
             return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes())));
         }
-        return response.setComplete();
+
+        response.setStatusCode(HttpStatus.NOT_FOUND);
+        return response
+                .writeWith(Mono.just(response.bufferFactory().wrap("{\"error\": \"wrong url path\"}".getBytes())));
     }
 }
