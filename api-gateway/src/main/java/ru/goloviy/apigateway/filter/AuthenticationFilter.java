@@ -53,7 +53,17 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         public final List<String> openApi = List.of(
                 "/auth/register",
                 "/auth/login",
-                "/eureka"
+                "/eureka",
+                "/swagger-ui",
+                "/v2/api-docs",
+                "/swagger-resources",
+                "/swagger-resources",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars",
+                "/v3/api-docs",
+                "/swagger-ui"
         );
         public Predicate<ServerHttpRequest> isSecured =
                 serverHttpRequest -> openApi.stream()

@@ -1,5 +1,8 @@
 package ru.goloviy.profileservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,8 @@ public class UserController {
     }
 
     @PostMapping("/get-user-list")
+    @Operation(summary = "Get user list")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<List<UserDto>> getUserList(@RequestBody @Nullable @Valid GetUserListRequest requestBody,
                                                      BindingResult bindingResult){
         List<User> users = userService.getUserList(requestBody, bindingResult);
@@ -39,6 +44,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "get one user by id")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id){
         User user = userService.getUserBy(id);
         UserDto userDto = userConvertor.toUserDto(user);

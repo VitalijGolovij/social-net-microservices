@@ -1,5 +1,8 @@
 package ru.goloviy.profileservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +28,16 @@ public class FriendController {
     private final PrincipalService principalService;
 
     @GetMapping
+    @Operation(summary = "Get friends")
+    @SecurityRequirement(name = "JWT")
     public List<UserDto> getFriends(HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         return friendService.getFriends(principalUser);
     }
 
     @PostMapping("/{id}/invite")
+    @Operation(summary = "Invite to friend")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<?> inviteToFriend(@PathVariable Long id, HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         User receiverUser = userService.getUserBy(id);
@@ -41,6 +48,8 @@ public class FriendController {
     }
 
     @DeleteMapping("/{id}/invite")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Cancel an invitation to friends")
     public ResponseEntity<?> cancelInviteFriend(@PathVariable Long id, HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         User receiverUser = userService.getUserBy(id);
@@ -51,6 +60,8 @@ public class FriendController {
     }
 
     @PostMapping("/{id}/accept")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Accept an incoming friend invitation")
     public ResponseEntity<?> acceptToFriend(@PathVariable Long id, HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         User receiverUser = userService.getUserBy(id);
@@ -61,6 +72,8 @@ public class FriendController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Delete friend by id")
     public ResponseEntity<?> deleteFriend(@PathVariable Long id, HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         User receiverUser = userService.getUserBy(id);
@@ -71,6 +84,8 @@ public class FriendController {
     }
 
     @GetMapping("/requests")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Get friend requests")
     public List<UserDto> getFriendRequests(HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         return friendService.getFriendRequests(principalUser);

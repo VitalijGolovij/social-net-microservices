@@ -1,5 +1,7 @@
 package ru.goloviy.messageservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class MessageController {
     }
 
     @PostMapping("/send-to-user/{receiverId}")
+    @Operation(summary = "send a message to a user by id")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<Message> sendMessageToUser(@RequestBody MessageRequest requestMessage,
                                                      @PathVariable Long receiverId,
                                                      HttpServletRequest request){
@@ -35,6 +39,8 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/send-to-chat/{chatId}")
+    @Operation(summary = "send a message to the chat room by chat id")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<?> sendMessageToChat(@RequestBody MessageRequest requestMessage,
                                                @PathVariable Long chatId,
                                                HttpServletRequest request){
@@ -43,11 +49,15 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping
+    @Operation(summary = "get all chats available to the user")
+    @SecurityRequirement(name = "JWT")
     public List<Chat> getChats(HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         return messageService.getUserChats(principalUser);
     }
     @GetMapping("/{chatId}")
+    @Operation(summary = "get the chat available to the user by id")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<?> getChat(HttpServletRequest request,
                                      @PathVariable Long chatId){
         User principalUser = principalService.getPrincipalUser(request);

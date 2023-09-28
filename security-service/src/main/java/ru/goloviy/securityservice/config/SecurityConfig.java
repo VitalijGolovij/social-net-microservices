@@ -19,6 +19,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private static final String[] WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/security/v3/api-docs/swagger-config",
+            "/security/v3/api-docs",
+
+            "/auth/register",
+            "/auth/login",
+            "/auth/validate-token",
+            "security/auth/register"
+    };
     @Autowired
     public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -43,8 +61,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(c->c.requestMatchers("/auth/register","/auth/login","/auth/validate-token",
-                                "security/auth/register").permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(c->c.requestMatchers(WHITELIST).permitAll().anyRequest().authenticated())
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }

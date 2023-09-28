@@ -1,5 +1,7 @@
 package ru.goloviy.filestorageservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -24,6 +26,8 @@ public class ImageController {
     }
 
     @PostMapping
+    @Operation(summary = "load PNG image")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<?> saveImage(@RequestParam("image")MultipartFile file,
                                        HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
@@ -31,6 +35,8 @@ public class ImageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/{imageName}")
+    @Operation(summary = "get PNG image using its generated name (not the one it was loaded with)")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<?> getImage(@PathVariable String imageName){
         byte[] image = imageService.getImage(imageName);
         return ResponseEntity.status(HttpStatus.OK)
@@ -38,6 +44,8 @@ public class ImageController {
                 .body(image);
     }
     @GetMapping
+    @Operation(summary = "get a list of image generated names uploaded by the user")
+    @SecurityRequirement(name = "JWT")
     public ResponseEntity<?> getUserImagesName(HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
         List<String> imageNames = imageService.getImageNameList(principalUser);
