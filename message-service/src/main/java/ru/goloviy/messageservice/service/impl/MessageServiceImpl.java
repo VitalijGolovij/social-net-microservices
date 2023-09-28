@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.goloviy.messageservice.exception.ChatNotFoundException;
+import ru.goloviy.messageservice.exception.MemberAlreadyExistException;
 import ru.goloviy.messageservice.model.Chat;
 import ru.goloviy.messageservice.model.Message;
 import ru.goloviy.messageservice.model.User;
@@ -35,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
     }
     @Override
     @Transactional
-    public void sendMessageToUser(User userSender, Long toUserId, String text) {
+    public Message sendMessageToUser(User userSender, Long toUserId, String text) {
         User userReceiver = userService.getUserBy(toUserId);
         Message message = new Message(userSender, text);
         Set<User> chatMembers = new HashSet<>(){{add(userReceiver); add(userSender);}};
@@ -50,19 +51,43 @@ public class MessageServiceImpl implements MessageService {
         chatRepository.save(chat);
         messageRepository.save(message);
         eventProcessService.processPrivateMessage(userSender, userReceiver, text);
+        return message;
     }
 
     @Override
     @Transactional
-    public void sendMessageToChat(User userSender, Long chatId, String text) {
-        Chat chat = getChatBy(chatId);
+    public Message sendMessageToChat(User userSender, Long chatId, String text) {
+        Chat chat = getChat(userSender, chatId);
         Message message = new Message(userSender, text);
         chat.addMessage(message);
         message.setChat(chat);
         chatRepository.save(chat);
         messageRepository.save(message);
         eventProcessService.processChatMessage(chat, userSender, text);
+        return message;
     }
+
+    @Override
+    @Transactional
+    public Chat createChat(User principalUser) {
+        Chat newChat = new Chat();
+        newChat.addMember(principalUser);
+        principalUser.addChat(newChat);
+        return chatRepository.save(newChat);
+    }
+
+    @Override
+    @Transactional
+    public Chat addMemberToChat(User principalUser, Long chatId, Long userId) {
+        Chat chat = getChat(principalUser, chatId);
+        User newMember = userService.getUserBy(userId);
+        if (chat.getMembers().contains(newMember))
+            throw new MemberAlreadyExistException(chatId, userId);
+        chat.addMember(newMember);
+        newMember.addChat(chat);
+        return chatRepository.save(chat);
+    }
+
     @Override
     public List<Chat> getUserChats(User user){
         return user.getChats();

@@ -10,13 +10,13 @@ import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "chat")
 @Setter
-@NoArgsConstructor
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +41,15 @@ public class Chat {
         this.members = members;
         messages = new ArrayList<>();
     }
+    public Chat(){
+        this.members = new HashSet<>();
+        this.messages = new ArrayList<>();
+    }
     public void addMessage(Message message){
         messages.add(message);
+    }
+    public void addMember(User user){
+        members.add(user);
     }
 
     public Long getId() {

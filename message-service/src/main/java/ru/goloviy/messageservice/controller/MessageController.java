@@ -31,12 +31,12 @@ public class MessageController {
     @PostMapping("/send-to-user/{userId}")
     @Operation(summary = "send a message to a user by id")
     @SecurityRequirement(name = "JWT")
-    public ResponseEntity<Message> sendMessageToUser(@RequestBody MessageRequest requestMessage,
+    public ResponseEntity<?> sendMessageToUser(@RequestBody MessageRequest requestMessage,
                                                      @PathVariable Long userId,
                                                      HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
-        messageService.sendMessageToUser(principalUser, userId, requestMessage.getMessage());
-        return new ResponseEntity<>(HttpStatus.OK);
+        Message msg = messageService.sendMessageToUser(principalUser, userId, requestMessage.getMessage());
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
     @PostMapping("/send-to-chat/{chatId}")
     @Operation(summary = "send a message to the chat room by chat id")
@@ -45,8 +45,8 @@ public class MessageController {
                                                @PathVariable Long chatId,
                                                HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
-        messageService.sendMessageToChat(principalUser, chatId, requestMessage.getMessage());
-        return new ResponseEntity<>(HttpStatus.OK);
+        Message msg = messageService.sendMessageToChat(principalUser, chatId, requestMessage.getMessage());
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
     @GetMapping
     @Operation(summary = "get all chats available to the user")
@@ -62,6 +62,24 @@ public class MessageController {
                                      @PathVariable Long chatId){
         User principalUser = principalService.getPrincipalUser(request);
         Chat chat = messageService.getChat(principalUser, chatId);
+        return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+    @PostMapping
+    @Operation(summary = "create new chat")
+    @SecurityRequirement(name = "JWT")
+    public ResponseEntity<?> createChat(HttpServletRequest request){
+        User principalUser = principalService.getPrincipalUser(request);
+        Chat chat = messageService.createChat(principalUser);
+        return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+    @PostMapping("/{chatId}/add/{userId}")
+    @Operation(summary = "add member to chat")
+    @SecurityRequirement(name = "JWT")
+    public ResponseEntity<?> addMemberToChat(HttpServletRequest request,
+                                             @PathVariable Long chatId,
+                                             @PathVariable Long userId){
+        User principalUser = principalService.getPrincipalUser(request);
+        Chat chat = messageService.addMemberToChat(principalUser, chatId, userId);
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }
 }
