@@ -28,14 +28,14 @@ public class MessageController {
         this.principalService = principalService;
     }
 
-    @PostMapping("/send-to-user/{receiverId}")
+    @PostMapping("/send-to-user/{userId}")
     @Operation(summary = "send a message to a user by id")
     @SecurityRequirement(name = "JWT")
     public ResponseEntity<Message> sendMessageToUser(@RequestBody MessageRequest requestMessage,
-                                                     @PathVariable Long receiverId,
+                                                     @PathVariable Long userId,
                                                      HttpServletRequest request){
         User principalUser = principalService.getPrincipalUser(request);
-        messageService.sendMessageToUser(principalUser, receiverId, requestMessage.getMessage());
+        messageService.sendMessageToUser(principalUser, userId, requestMessage.getMessage());
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/send-to-chat/{chatId}")

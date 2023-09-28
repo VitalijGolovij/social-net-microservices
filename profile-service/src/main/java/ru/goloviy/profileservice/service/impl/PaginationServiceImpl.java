@@ -17,7 +17,7 @@ public class PaginationServiceImpl implements PaginationService {
         Sort sort = getSort(pagination);
 
         return PageRequest.of(pagination.getPageNumber(),
-                pagination.getPageCount(),
+                pagination.getUserCount(),
                 sort);
     }
 

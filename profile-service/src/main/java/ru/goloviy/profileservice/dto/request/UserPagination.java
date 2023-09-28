@@ -12,6 +12,6 @@ public class UserPagination {
     private Boolean orderAsc = true;
     @NotNull(message = "pageNumber most not be null")
     private Integer pageNumber;
-    @NotNull(message = "pageCount most not be null")
-    private Integer pageCount;
+    @NotNull(message = "userCount most not be null")
+    private Integer userCount;
 }
