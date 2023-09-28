@@ -1,5 +1,5 @@
 # REST API микросервисы для социально сети
-
+![Image alt](https://github.com/VitalijGolovij/social-net-microservices/blob/dev/social-net-services.png)
 ## SECURITY SERVICE (/security)
 - swagger адресс: /security/swagger-ui/index.html
 
